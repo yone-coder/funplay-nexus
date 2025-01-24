@@ -1,4 +1,5 @@
 import GameCard from "@/components/GameCard";
+import Header from "@/components/Header";
 
 const games = [
   {
@@ -43,19 +44,22 @@ const categories = [
 
 const Explore = () => {
   return (
-    <div className="pb-20 px-4">
-      <h1 className="text-3xl font-bold mt-6 mb-8">Explore Games</h1>
-      
-      {categories.map((category) => (
-        <section key={category.name} className="mb-8">
-          <h2 className="text-xl font-semibold mb-4">{category.name}</h2>
-          <div className="flex overflow-x-auto pb-4 -mx-4 px-4 gap-4">
-            {category.games.map((game) => (
-              <GameCard key={game.title} {...game} />
-            ))}
-          </div>
-        </section>
-      ))}
+    <div>
+      <Header />
+      <div className="pb-20 px-4">
+        <h1 className="text-3xl font-bold mt-6 mb-8">Explore Games</h1>
+        
+        {categories.map((category) => (
+          <section key={category.name} className="mb-8">
+            <h2 className="text-xl font-semibold mb-4">{category.name}</h2>
+            <div className="flex overflow-x-auto pb-4 -mx-4 px-4 gap-4">
+              {category.games.map((game) => (
+                <GameCard key={game.title} {...game} />
+              ))}
+            </div>
+          </section>
+        ))}
+      </div>
     </div>
   );
 };
