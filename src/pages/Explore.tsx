@@ -7,30 +7,45 @@ const games = [
     image: "https://images.unsplash.com/photo-1611996575749-79a3a250f948?w=500",
     available: true,
     path: "/morpion",
+    status: "live" as const,
+    date: "Now",
+    viewers: 1234
   },
   {
     title: "Chess",
     image: "https://images.unsplash.com/photo-1529699211952-734e80c4d42b?w=500",
     available: false,
     path: "/chess",
+    status: "upcoming" as const,
+    date: "March 15, 2024",
+    viewers: 856
   },
   {
     title: "Poker",
     image: "https://images.unsplash.com/photo-1541278107931-e006523892df?w=500",
     available: false,
     path: "/poker",
+    status: "upcoming" as const,
+    date: "March 20, 2024",
+    viewers: 2891
   },
   {
     title: "Domino",
     image: "https://images.unsplash.com/photo-1566694271453-390536dd1f0d?w=500",
     available: false,
     path: "/domino",
+    status: "upcoming" as const,
+    date: "April 1, 2024",
+    viewers: 567
   },
   {
     title: "Backgammon",
     image: "https://images.unsplash.com/photo-1595759713235-f4681a33e496?w=500",
     available: false,
     path: "/backgammon",
+    status: "upcoming" as const,
+    date: "April 5, 2024",
+    viewers: 1023
   },
 ];
 
