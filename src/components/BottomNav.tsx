@@ -12,14 +12,16 @@ const BottomNav = () => {
   ];
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 bg-gaming-500 text-white px-4 py-2">
-      <div className="flex justify-around items-center">
+    <nav className="fixed bottom-0 left-0 right-0 bg-primary border-t border-gaming-600 backdrop-blur-lg">
+      <div className="flex justify-around items-center max-w-md mx-auto">
         {navItems.map(({ icon: Icon, label, path }) => (
           <Link
             key={path}
             to={path}
-            className={`flex flex-col items-center p-2 ${
-              location.pathname === path ? "text-gaming-200" : "text-gray-400"
+            className={`flex flex-col items-center p-3 ${
+              location.pathname === path 
+                ? "text-accent" 
+                : "text-gray-400 hover:text-gray-300"
             }`}
           >
             <Icon className="w-6 h-6" />

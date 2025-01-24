@@ -1,23 +1,34 @@
+import { Link } from "react-router-dom";
 import TournamentCard from "@/components/TournamentCard";
 
 const tournaments = [
   {
-    name: "Weekend Championship",
-    entryFee: 5,
-    prize: "$100",
-    players: { current: 8, max: 32 },
+    id: "1",
+    name: "National Championship",
+    entryFee: 50,
+    prize: "$10,000",
+    players: { current: 16, max: 32 },
   },
   {
-    name: "Beginners League",
+    id: "2",
+    name: "Regional Qualifier",
+    entryFee: 25,
+    prize: "$5,000",
+    players: { current: 8, max: 16 },
+  },
+  {
+    id: "3",
+    name: "Rookie League",
     entryFee: 0,
-    prize: "$10",
-    players: { current: 4, max: 16 },
+    prize: "$1,000",
+    players: { current: 4, max: 8 },
   },
   {
+    id: "4",
     name: "Pro Circuit",
-    entryFee: 20,
-    prize: "$500",
-    players: { current: 2, max: 8 },
+    entryFee: 100,
+    prize: "$25,000",
+    players: { current: 2, max: 64 },
   },
 ];
 
@@ -28,7 +39,9 @@ const Morpion = () => {
       
       <div className="space-y-4">
         {tournaments.map((tournament) => (
-          <TournamentCard key={tournament.name} {...tournament} />
+          <Link key={tournament.id} to={`/tournament/${tournament.id}`}>
+            <TournamentCard {...tournament} />
+          </Link>
         ))}
       </div>
     </div>
