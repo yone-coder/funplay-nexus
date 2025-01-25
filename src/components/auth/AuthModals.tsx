@@ -23,8 +23,23 @@ export function AuthModals({
   const [loading, setLoading] = useState(false);
   const { toast } = useToast();
 
+  const resetForm = () => {
+    setEmail("");
+    setPassword("");
+    setLoading(false);
+  };
+
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!email || !password) {
+      toast({
+        variant: "destructive",
+        title: "Missing fields",
+        description: "Please fill in both email and password",
+      });
+      return;
+    }
+    
     setLoading(true);
     
     try {
@@ -35,7 +50,7 @@ export function AuthModals({
 
       if (error) {
         if (error.message === "Invalid login credentials") {
-          throw new Error("Invalid email or password. Please try again or sign up if you don't have an account.");
+          throw new Error("Email or password is incorrect. Please try again or sign up if you don't have an account.");
         }
         throw error;
       }
@@ -45,6 +60,7 @@ export function AuthModals({
           title: "Successfully logged in!",
           description: "Welcome back!",
         });
+        resetForm();
         onLoginClose();
       }
     } catch (error: any) {
@@ -55,14 +71,21 @@ export function AuthModals({
       });
     } finally {
       setLoading(false);
-      setEmail("");
-      setPassword("");
     }
   };
 
   const handleSignUp = async (e: React.FormEvent) => {
     e.preventDefault();
     
+    if (!email || !password) {
+      toast({
+        variant: "destructive",
+        title: "Missing fields",
+        description: "Please fill in both email and password",
+      });
+      return;
+    }
+
     if (password.length < 6) {
       toast({
         variant: "destructive",
@@ -95,6 +118,7 @@ export function AuthModals({
           title: "Successfully signed up!",
           description: "Please check your email to verify your account.",
         });
+        resetForm();
         onSignUpClose();
       }
     } catch (error: any) {
@@ -105,8 +129,6 @@ export function AuthModals({
       });
     } finally {
       setLoading(false);
-      setEmail("");
-      setPassword("");
     }
   };
 
