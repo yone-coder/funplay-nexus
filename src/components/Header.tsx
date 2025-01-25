@@ -1,24 +1,34 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
-import { Bell, Scan, Search, UserPlus } from "lucide-react";
+import { Bell, Scan, Search, UserPlus, User, LogOut, Settings } from "lucide-react";
 import { AuthModals } from "./auth/AuthModals";
 import { supabase } from "@/integrations/supabase/client";
 import type { User } from "@supabase/supabase-js";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { useToast } from "./ui/use-toast";
 
 const Header = () => {
+  const navigate = useNavigate();
+  const { toast } = useToast();
   const [user, setUser] = useState<User | null>(null);
   const [isLoginOpen, setIsLoginOpen] = useState(false);
   const [isSignUpOpen, setIsSignUpOpen] = useState(false);
 
   useEffect(() => {
-    // Get initial session
     supabase.auth.getSession().then(({ data: { session } }) => {
       setUser(session?.user ?? null);
     });
 
-    // Listen for auth changes
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((_event, session) => {
@@ -28,16 +38,58 @@ const Header = () => {
     return () => subscription.unsubscribe();
   }, []);
 
+  const handleSignOut = async () => {
+    try {
+      await supabase.auth.signOut();
+      toast({
+        title: "Signed out successfully",
+      });
+      navigate("/");
+    } catch (error) {
+      toast({
+        title: "Error signing out",
+        description: "Please try again later",
+        variant: "destructive",
+      });
+    }
+  };
+
   if (user) {
     return (
       <header className="sticky top-0 z-50 w-full border-b border-gaming-600 bg-primary px-4 py-3">
         <div className="flex items-center justify-between gap-4">
-          <Avatar className="h-8 w-8 cursor-pointer">
-            <AvatarImage src={user.user_metadata.avatar_url ?? "https://github.com/shadcn.png"} />
-            <AvatarFallback>
-              {user.email?.substring(0, 2).toUpperCase() ?? "U"}
-            </AvatarFallback>
-          </Avatar>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Avatar className="h-8 w-8 cursor-pointer">
+                <AvatarImage src={user.user_metadata.avatar_url ?? "https://github.com/shadcn.png"} />
+                <AvatarFallback>
+                  {user.email?.substring(0, 2).toUpperCase() ?? "U"}
+                </AvatarFallback>
+              </Avatar>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="w-56">
+              <DropdownMenuLabel>
+                <div className="flex flex-col space-y-1">
+                  <p className="text-sm font-medium leading-none">{user.user_metadata.full_name || "User"}</p>
+                  <p className="text-xs leading-none text-muted-foreground">{user.email}</p>
+                </div>
+              </DropdownMenuLabel>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem onClick={() => navigate("/profile")} className="cursor-pointer">
+                <User className="mr-2 h-4 w-4" />
+                Profile
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => navigate("/settings")} className="cursor-pointer">
+                <Settings className="mr-2 h-4 w-4" />
+                Settings
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem onClick={handleSignOut} className="cursor-pointer">
+                <LogOut className="mr-2 h-4 w-4" />
+                Sign out
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
 
           <div className="flex flex-1 items-center gap-2 rounded-full bg-gaming-600 px-4 py-1.5">
             <Search className="h-5 w-5 text-gray-400" />

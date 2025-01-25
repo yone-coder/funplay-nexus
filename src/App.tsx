@@ -10,6 +10,7 @@ import Explore from "./pages/Explore";
 import Live from "./pages/Live";
 import Wallet from "./pages/Wallet";
 import Morpion from "./pages/Morpion";
+import Profile from "./pages/Profile";
 import TournamentDetails from "./pages/TournamentDetails";
 
 const queryClient = new QueryClient();
@@ -28,6 +29,7 @@ const App = () => (
             <Route path="/live" element={<Live />} />
             <Route path="/wallet" element={<Wallet />} />
             <Route path="/morpion" element={<Morpion />} />
+            <Route path="/profile" element={<Profile />} />
             <Route path="/tournament/:id" element={<TournamentDetails />} />
           </Routes>
           <BottomNav />
