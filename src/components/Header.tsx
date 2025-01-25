@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
-import { Bell, Scan, Search, User, UserPlus } from "lucide-react";
+import { Bell, Scan, Search, UserPlus } from "lucide-react";
 import { AuthModals } from "./auth/AuthModals";
 import { supabase } from "@/integrations/supabase/client";
 import type { User } from "@supabase/supabase-js";
@@ -69,7 +69,7 @@ const Header = () => {
               className="flex items-center gap-2"
               onClick={() => setIsLoginOpen(true)}
             >
-              <User className="h-5 w-5" />
+              <UserPlus className="h-5 w-5" />
               Sign In
             </Button>
             <Button 
