@@ -3,10 +3,10 @@ import { useNavigate } from "react-router-dom";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
+import type { User } from "@supabase/supabase-js";
 import { Bell, Scan, Search, UserPlus, LogOut, Settings } from "lucide-react";
 import { AuthModals } from "./auth/AuthModals";
 import { supabase } from "@/integrations/supabase/client";
-import type { User } from "@supabase/supabase-js";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -25,31 +25,46 @@ const Header = () => {
   const [isSignUpOpen, setIsSignUpOpen] = useState(false);
 
   useEffect(() => {
+    // Initialize session
     supabase.auth.getSession().then(({ data: { session } }) => {
-      setUser(session?.user ?? null);
+      if (session?.user) {
+        setUser(session.user);
+      } else {
+        setUser(null);
+      }
     });
 
+    // Listen for auth changes
     const {
       data: { subscription },
-    } = supabase.auth.onAuthStateChange((_event, session) => {
-      setUser(session?.user ?? null);
+    } = supabase.auth.onAuthStateChange(async (_event, session) => {
+      if (session?.user) {
+        setUser(session.user);
+      } else {
+        setUser(null);
+      }
     });
 
-    return () => subscription.unsubscribe();
+    return () => {
+      subscription.unsubscribe();
+    };
   }, []);
 
   const handleSignOut = async () => {
     try {
-      await supabase.auth.signOut();
+      const { error } = await supabase.auth.signOut();
+      if (error) throw error;
+
       toast({
         title: "Signed out successfully",
       });
+      setUser(null);
       navigate("/");
-    } catch (error) {
+    } catch (error: any) {
       toast({
-        title: "Error signing out",
-        description: "Please try again later",
         variant: "destructive",
+        title: "Error signing out",
+        description: error.message || "Please try again later",
       });
     }
   };
