@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
-import { Bell, Scan, Search, UserPlus, User, LogOut, Settings } from "lucide-react";
+import { Bell, Scan, Search, UserPlus, LogOut, Settings } from "lucide-react";
 import { AuthModals } from "./auth/AuthModals";
 import { supabase } from "@/integrations/supabase/client";
 import type { User } from "@supabase/supabase-js";
@@ -76,7 +76,7 @@ const Header = () => {
               </DropdownMenuLabel>
               <DropdownMenuSeparator />
               <DropdownMenuItem onClick={() => navigate("/profile")} className="cursor-pointer">
-                <User className="mr-2 h-4 w-4" />
+                <UserPlus className="mr-2 h-4 w-4" />
                 Profile
               </DropdownMenuItem>
               <DropdownMenuItem onClick={() => navigate("/settings")} className="cursor-pointer">
