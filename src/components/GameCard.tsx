@@ -23,7 +23,7 @@ const GameCard = ({
   viewers = 0
 }: GameCardProps) => {
   return (
-    <Link to={available ? path : "#"} className="block w-72 mr-4 relative">
+    <Link to={available ? path : "#"} className="block w-80 mr-6 relative">
       <Card className="overflow-hidden group">
         <div className="relative aspect-video">
           <img
@@ -41,18 +41,18 @@ const GameCard = ({
           {status === "live" && (
             <Badge 
               variant="destructive" 
-              className="absolute top-2 left-2 flex items-center gap-1"
+              className="absolute top-3 left-3 flex items-center gap-1.5 px-2.5 py-1"
             >
               <Video className="w-3 h-3" />
               LIVE
             </Badge>
           )}
         </div>
-        <div className="p-3 space-y-2">
+        <div className="p-4 space-y-3">
           <h3 className="font-semibold text-lg line-clamp-1">{title}</h3>
           <div className="flex items-center justify-between text-sm text-muted-foreground">
             <span>{status === "live" ? "Live Now" : date}</span>
-            <div className="flex items-center gap-1">
+            <div className="flex items-center gap-2">
               <Users className="w-4 h-4" />
               {viewers.toLocaleString()}
             </div>

@@ -4,6 +4,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import BottomNav from "./components/BottomNav";
+import Header from "./components/Header";
 import Index from "./pages/Index";
 import Explore from "./pages/Explore";
 import Live from "./pages/Live";
@@ -20,6 +21,7 @@ const App = () => (
       <Sonner />
       <BrowserRouter>
         <div className="min-h-screen bg-primary text-white">
+          <Header />
           <Routes>
             <Route path="/" element={<Index />} />
             <Route path="/explore" element={<Explore />} />
