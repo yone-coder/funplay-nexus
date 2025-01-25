@@ -1,22 +1,42 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { Bell, Scan, Search, User, UserPlus } from "lucide-react";
+import { AuthModals } from "./auth/AuthModals";
+import { supabase } from "@/integrations/supabase/client";
+import type { User } from "@supabase/supabase-js";
 
 const Header = () => {
-  // Temporary state for demo purposes - replace with actual auth logic
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [user, setUser] = useState<User | null>(null);
+  const [isLoginOpen, setIsLoginOpen] = useState(false);
+  const [isSignUpOpen, setIsSignUpOpen] = useState(false);
 
-  const toggleAuth = () => setIsAuthenticated(!isAuthenticated);
+  useEffect(() => {
+    // Get initial session
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setUser(session?.user ?? null);
+    });
 
-  if (isAuthenticated) {
+    // Listen for auth changes
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
+      setUser(session?.user ?? null);
+    });
+
+    return () => subscription.unsubscribe();
+  }, []);
+
+  if (user) {
     return (
       <header className="sticky top-0 z-50 w-full border-b border-gaming-600 bg-primary px-4 py-3">
         <div className="flex items-center justify-between gap-4">
           <Avatar className="h-8 w-8 cursor-pointer">
-            <AvatarImage src="https://github.com/shadcn.png" />
-            <AvatarFallback>CN</AvatarFallback>
+            <AvatarImage src={user.user_metadata.avatar_url ?? "https://github.com/shadcn.png"} />
+            <AvatarFallback>
+              {user.email?.substring(0, 2).toUpperCase() ?? "U"}
+            </AvatarFallback>
           </Avatar>
 
           <div className="flex flex-1 items-center gap-2 rounded-full bg-gaming-600 px-4 py-1.5">
@@ -38,26 +58,38 @@ const Header = () => {
   }
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-gaming-600 bg-primary px-4 py-3">
-      <div className="flex items-center justify-between">
-        <div className="text-xl font-bold">FunPlay</div>
+    <>
+      <header className="sticky top-0 z-50 w-full border-b border-gaming-600 bg-primary px-4 py-3">
+        <div className="flex items-center justify-between">
+          <div className="text-xl font-bold">FunPlay</div>
 
-        <div className="flex items-center gap-2">
-          <Button
-            variant="ghost"
-            className="flex items-center gap-2"
-            onClick={toggleAuth}
-          >
-            <User className="h-5 w-5" />
-            Sign In
-          </Button>
-          <Button className="flex items-center gap-2" onClick={toggleAuth}>
-            <UserPlus className="h-5 w-5" />
-            Sign Up
-          </Button>
+          <div className="flex items-center gap-2">
+            <Button
+              variant="ghost"
+              className="flex items-center gap-2"
+              onClick={() => setIsLoginOpen(true)}
+            >
+              <User className="h-5 w-5" />
+              Sign In
+            </Button>
+            <Button 
+              className="flex items-center gap-2"
+              onClick={() => setIsSignUpOpen(true)}
+            >
+              <UserPlus className="h-5 w-5" />
+              Sign Up
+            </Button>
+          </div>
         </div>
-      </div>
-    </header>
+      </header>
+
+      <AuthModals
+        isLoginOpen={isLoginOpen}
+        isSignUpOpen={isSignUpOpen}
+        onLoginClose={() => setIsLoginOpen(false)}
+        onSignUpClose={() => setIsSignUpOpen(false)}
+      />
+    </>
   );
 };
 
