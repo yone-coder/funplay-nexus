@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "../ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "../ui/dialog";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
@@ -28,19 +28,25 @@ export function AuthModals({
     setLoading(true);
     
     try {
-      const { error } = await supabase.auth.signInWithPassword({
+      const { data, error } = await supabase.auth.signInWithPassword({
         email,
         password,
       });
 
-      if (error) throw error;
+      if (error) {
+        if (error.message === "Invalid login credentials") {
+          throw new Error("Invalid email or password. Please try again or sign up if you don't have an account.");
+        }
+        throw error;
+      }
 
-      toast({
-        title: "Successfully logged in!",
-        description: "Welcome back!",
-      });
-      
-      onLoginClose();
+      if (data.user) {
+        toast({
+          title: "Successfully logged in!",
+          description: "Welcome back!",
+        });
+        onLoginClose();
+      }
     } catch (error: any) {
       toast({
         variant: "destructive",
@@ -49,15 +55,27 @@ export function AuthModals({
       });
     } finally {
       setLoading(false);
+      setEmail("");
+      setPassword("");
     }
   };
 
   const handleSignUp = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    if (password.length < 6) {
+      toast({
+        variant: "destructive",
+        title: "Invalid password",
+        description: "Password must be at least 6 characters long",
+      });
+      return;
+    }
+    
     setLoading(true);
     
     try {
-      const { error } = await supabase.auth.signUp({
+      const { data, error } = await supabase.auth.signUp({
         email,
         password,
         options: {
@@ -65,14 +83,20 @@ export function AuthModals({
         },
       });
 
-      if (error) throw error;
+      if (error) {
+        if (error.message.includes("already registered")) {
+          throw new Error("This email is already registered. Please login instead.");
+        }
+        throw error;
+      }
 
-      toast({
-        title: "Successfully signed up!",
-        description: "Please check your email to verify your account.",
-      });
-      
-      onSignUpClose();
+      if (data.user) {
+        toast({
+          title: "Successfully signed up!",
+          description: "Please check your email to verify your account.",
+        });
+        onSignUpClose();
+      }
     } catch (error: any) {
       toast({
         variant: "destructive",
@@ -81,6 +105,8 @@ export function AuthModals({
       });
     } finally {
       setLoading(false);
+      setEmail("");
+      setPassword("");
     }
   };
 
@@ -90,6 +116,9 @@ export function AuthModals({
         <DialogContent className="sm:max-w-[425px]">
           <DialogHeader>
             <DialogTitle>Login to your account</DialogTitle>
+            <DialogDescription>
+              Enter your email and password to login
+            </DialogDescription>
           </DialogHeader>
           <form onSubmit={handleLogin} className="space-y-4 pt-4">
             <div className="space-y-2">
@@ -129,6 +158,9 @@ export function AuthModals({
         <DialogContent className="sm:max-w-[425px]">
           <DialogHeader>
             <DialogTitle>Create an account</DialogTitle>
+            <DialogDescription>
+              Enter your email and password to sign up
+            </DialogDescription>
           </DialogHeader>
           <form onSubmit={handleSignUp} className="space-y-4 pt-4">
             <div className="space-y-2">
@@ -147,10 +179,11 @@ export function AuthModals({
               <Input
                 id="signup-password"
                 type="password"
-                placeholder="Enter your password"
+                placeholder="Enter your password (min. 6 characters)"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
+                minLength={6}
               />
             </div>
             <Button type="submit" className="w-full" disabled={loading}>
