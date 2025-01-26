@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { Bell } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Coins, ArrowUpRight, Trophy, History } from "lucide-react";
@@ -10,8 +9,6 @@ import { TrophiesList } from "@/components/wallet/TrophiesList";
 import { HistoryList } from "@/components/wallet/HistoryList";
 
 const Wallet = () => {
-  const [activeTab, setActiveTab] = useState("overview");
-
   return (
     <div className="pb-20 px-4 max-w-7xl mx-auto">
       <div className="flex justify-between items-center mt-6 mb-8">
@@ -22,56 +19,43 @@ const Wallet = () => {
         </button>
       </div>
 
-      <Tabs defaultValue="overview" className="w-full">
+      <BalanceCard />
+      <QuickActions />
+
+      <Tabs defaultValue="tokens" className="w-full">
         <TabsList className="w-full justify-start mb-6 bg-transparent">
-          <TabsTrigger value="overview" className="data-[state=active]:bg-gaming-500">Overview</TabsTrigger>
-          <TabsTrigger value="transactions" className="data-[state=active]:bg-gaming-500">Transactions</TabsTrigger>
+          <TabsTrigger value="tokens" className="data-[state=active]:bg-gaming-500">
+            <Coins className="h-4 w-4 mr-2" />
+            Tokens
+          </TabsTrigger>
+          <TabsTrigger value="transactions" className="data-[state=active]:bg-gaming-500">
+            <ArrowUpRight className="h-4 w-4 mr-2" />
+            Transactions
+          </TabsTrigger>
+          <TabsTrigger value="trophies" className="data-[state=active]:bg-gaming-500">
+            <Trophy className="h-4 w-4 mr-2" />
+            Trophies
+          </TabsTrigger>
+          <TabsTrigger value="history" className="data-[state=active]:bg-gaming-500">
+            <History className="h-4 w-4 mr-2" />
+            History
+          </TabsTrigger>
         </TabsList>
 
-        <TabsContent value="overview">
-          <BalanceCard />
-          <QuickActions />
-
-          <Tabs defaultValue="tokens" className="w-full">
-            <TabsList className="w-full justify-start mb-6 bg-transparent">
-              <TabsTrigger value="tokens" className="data-[state=active]:bg-gaming-500">
-                <Coins className="h-4 w-4 mr-2" />
-                Tokens
-              </TabsTrigger>
-              <TabsTrigger value="transactions" className="data-[state=active]:bg-gaming-500">
-                <ArrowUpRight className="h-4 w-4 mr-2" />
-                Transactions
-              </TabsTrigger>
-              <TabsTrigger value="trophies" className="data-[state=active]:bg-gaming-500">
-                <Trophy className="h-4 w-4 mr-2" />
-                Trophies
-              </TabsTrigger>
-              <TabsTrigger value="history" className="data-[state=active]:bg-gaming-500">
-                <History className="h-4 w-4 mr-2" />
-                History
-              </TabsTrigger>
-            </TabsList>
-
-            <TabsContent value="tokens">
-              <TokensList />
-            </TabsContent>
-
-            <TabsContent value="transactions">
-              <TransactionsList />
-            </TabsContent>
-
-            <TabsContent value="trophies">
-              <TrophiesList />
-            </TabsContent>
-
-            <TabsContent value="history">
-              <HistoryList />
-            </TabsContent>
-          </Tabs>
+        <TabsContent value="tokens">
+          <TokensList />
         </TabsContent>
 
         <TabsContent value="transactions">
           <TransactionsList />
+        </TabsContent>
+
+        <TabsContent value="trophies">
+          <TrophiesList />
+        </TabsContent>
+
+        <TabsContent value="history">
+          <HistoryList />
         </TabsContent>
       </Tabs>
     </div>
