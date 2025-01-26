@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Eye, EyeOff, Copy, Check } from "lucide-react";
@@ -17,7 +18,7 @@ export const BalanceCard = () => {
   };
 
   return (
-    <Card className="p-6 mb-6 bg-gradient-to-br from-gaming-600 via-gaming-500 to-gaming-400 relative overflow-hidden">
+    <Card className="p-6 mb-6 bg-gradient-to-br from-gaming-600 via-gaming-500 to-gaming-400 relative overflow-hidden shadow-lg rounded-lg">
       <div className="absolute inset-0 opacity-10">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_120%,rgba(255,255,255,0.1),transparent)]"></div>
         <div className="absolute top-0 left-0 right-0 h-32 bg-gradient-to-b from-white/10 to-transparent"></div>
@@ -32,7 +33,7 @@ export const BalanceCard = () => {
                 value={selectedCurrency}
                 onValueChange={setSelectedCurrency}
               >
-                <SelectTrigger className="w-24 h-8 bg-white/10 border-white/20 text-white">
+                <SelectTrigger className="w-24 h-8 bg-white/10 border-white/20 text-white rounded-md">
                   <SelectValue placeholder="Currency" />
                 </SelectTrigger>
                 <SelectContent>
@@ -54,7 +55,7 @@ export const BalanceCard = () => {
               </button>
             </div>
             <h2 className={cn(
-              "text-3xl font-bold transition-opacity duration-200",
+              "text-3xl font-bold transition-opacity duration-300",
               !showBalance && "opacity-0"
             )}>
               {selectedCurrency === "HTG" ? "HTG 156,789.00" : 
