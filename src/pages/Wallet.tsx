@@ -1,3 +1,5 @@
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Bell, Wallet as WalletIcon, Shield, Phone } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Coins, ArrowUpRight, Trophy, History } from "lucide-react";
@@ -10,20 +12,42 @@ import { HistoryList } from "@/components/wallet/HistoryList";
 import { SecuritySettings } from "@/components/wallet/SecuritySettings";
 import { PhoneTopUp } from "@/components/wallet/PhoneTopUp";
 import { useToast } from "@/hooks/use-toast";
-import { useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { RealtimePostgresChangesPayload } from "@supabase/supabase-js";
-import { Database } from "@/integrations/supabase/types";
+import type { Database } from "@/integrations/supabase/types";
 
 type Transaction = Database['public']['Tables']['transactions']['Row'];
-type TransactionChange = RealtimePostgresChangesPayload<Transaction> & {
+type TransactionChange = RealtimePostgresChangesPayload<{
+  [key: string]: any;
+}> & {
   new: Transaction;
 };
 
 const Wallet = () => {
+  const navigate = useNavigate();
   const { toast } = useToast();
+  const [isLoading, setIsLoading] = useState(true);
 
-  // Subscribe to real-time updates
+  useEffect(() => {
+    const checkAuth = async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      
+      if (!session) {
+        toast({
+          variant: "destructive",
+          title: "Authentication required",
+          description: "Please login to access your wallet",
+        });
+        navigate("/");
+        return;
+      }
+      
+      setIsLoading(false);
+    };
+
+    checkAuth();
+  }, [navigate, toast]);
+
   useEffect(() => {
     const channel = supabase
       .channel('schema-db-changes')
@@ -35,10 +59,12 @@ const Wallet = () => {
           table: 'transactions'
         },
         (payload: TransactionChange) => {
-          toast({
-            title: "Transaction Update",
-            description: `Transaction ${payload.eventType}: ${payload.new.type} - ${payload.new.amount} ${payload.new.currency}`,
-          });
+          if (payload.new) {
+            toast({
+              title: "Transaction Update",
+              description: `Transaction ${payload.eventType}: ${payload.new.type} - ${payload.new.amount} ${payload.new.currency}`,
+            });
+          }
         }
       )
       .subscribe();
@@ -47,6 +73,10 @@ const Wallet = () => {
       supabase.removeChannel(channel);
     };
   }, [toast]);
+
+  if (isLoading) {
+    return <div className="flex items-center justify-center min-h-screen">Loading...</div>;
+  }
 
   return (
     <div className="pb-20 px-4 max-w-7xl mx-auto">
