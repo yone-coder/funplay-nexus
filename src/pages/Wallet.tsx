@@ -16,6 +16,9 @@ import { RealtimePostgresChangesPayload } from "@supabase/supabase-js";
 import { Database } from "@/integrations/supabase/types";
 
 type Transaction = Database['public']['Tables']['transactions']['Row'];
+type TransactionChange = RealtimePostgresChangesPayload<Transaction> & {
+  new: Transaction;
+};
 
 const Wallet = () => {
   const { toast } = useToast();
@@ -31,13 +34,11 @@ const Wallet = () => {
           schema: 'public',
           table: 'transactions'
         },
-        (payload: RealtimePostgresChangesPayload<Transaction>) => {
-          if (payload.new) {
-            toast({
-              title: "Transaction Update",
-              description: `Transaction ${payload.eventType}: ${payload.new.type} - ${payload.new.amount} ${payload.new.currency}`,
-            });
-          }
+        (payload: TransactionChange) => {
+          toast({
+            title: "Transaction Update",
+            description: `Transaction ${payload.eventType}: ${payload.new.type} - ${payload.new.amount} ${payload.new.currency}`,
+          });
         }
       )
       .subscribe();
