@@ -29,22 +29,38 @@ export function AuthModals({
     setLoading(false);
   };
 
-  const handleLogin = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const validateForm = () => {
     if (!email || !password) {
       toast({
         variant: "destructive",
         title: "Missing fields",
         description: "Please fill in both email and password",
       });
-      return;
+      return false;
     }
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      toast({
+        variant: "destructive",
+        title: "Invalid email",
+        description: "Please enter a valid email address",
+      });
+      return false;
+    }
+
+    return true;
+  };
+
+  const handleLogin = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!validateForm()) return;
     
     setLoading(true);
     
     try {
       const { data, error } = await supabase.auth.signInWithPassword({
-        email,
+        email: email.trim(),
         password,
       });
 
@@ -76,15 +92,7 @@ export function AuthModals({
 
   const handleSignUp = async (e: React.FormEvent) => {
     e.preventDefault();
-    
-    if (!email || !password) {
-      toast({
-        variant: "destructive",
-        title: "Missing fields",
-        description: "Please fill in both email and password",
-      });
-      return;
-    }
+    if (!validateForm()) return;
 
     if (password.length < 6) {
       toast({
@@ -99,7 +107,7 @@ export function AuthModals({
     
     try {
       const { data, error } = await supabase.auth.signUp({
-        email,
+        email: email.trim(),
         password,
         options: {
           emailRedirectTo: window.location.origin,
