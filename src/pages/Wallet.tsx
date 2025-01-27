@@ -12,6 +12,10 @@ import { PhoneTopUp } from "@/components/wallet/PhoneTopUp";
 import { useToast } from "@/hooks/use-toast";
 import { useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
+import { RealtimePostgresChangesPayload } from "@supabase/supabase-js";
+import { Database } from "@/integrations/supabase/types";
+
+type Transaction = Database['public']['Tables']['transactions']['Row'];
 
 const Wallet = () => {
   const { toast } = useToast();
@@ -27,11 +31,13 @@ const Wallet = () => {
           schema: 'public',
           table: 'transactions'
         },
-        (payload) => {
-          toast({
-            title: "Transaction Update",
-            description: `Transaction ${payload.eventType}: ${payload.new.type} - ${payload.new.amount} ${payload.new.currency}`,
-          });
+        (payload: RealtimePostgresChangesPayload<Transaction>) => {
+          if (payload.new) {
+            toast({
+              title: "Transaction Update",
+              description: `Transaction ${payload.eventType}: ${payload.new.type} - ${payload.new.amount} ${payload.new.currency}`,
+            });
+          }
         }
       )
       .subscribe();
