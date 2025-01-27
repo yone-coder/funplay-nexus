@@ -1,14 +1,50 @@
+import { useEffect, useState } from "react";
 import { Card } from "@/components/ui/card";
-
-const tokens = [
-  { name: 'USD', amount: '1,234.56', icon: '$' },
-  { name: 'HTG', amount: '156,789.00', icon: 'G' },
-  { name: 'BTC', amount: '0.0234', icon: '₿' },
-  { name: 'EUR', amount: '890.12', icon: '€' },
-  { name: 'PESOS', amount: '45,678.90', icon: '₱' },
-];
+import { supabase } from "@/integrations/supabase/client";
+import { Loader2 } from "lucide-react";
 
 export const TokensList = () => {
+  const [balance, setBalance] = useState<number | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchBalance = async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) return;
+
+      const { data } = await supabase
+        .from('balances')
+        .select('total_balance')
+        .eq('user_id', user.id)
+        .single();
+
+      setBalance(data?.total_balance || 0);
+      setLoading(false);
+    };
+
+    fetchBalance();
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center p-8">
+        <Loader2 className="h-6 w-6 animate-spin" />
+      </div>
+    );
+  }
+
+  if (!balance) {
+    return (
+      <Card className="p-6 text-center">
+        <p className="text-gray-400">No balance available</p>
+      </Card>
+    );
+  }
+
+  const tokens = [
+    { name: 'HTG', amount: balance.toFixed(2), icon: 'G' },
+  ];
+
   return (
     <div className="grid gap-4">
       {tokens.map((token, index) => (

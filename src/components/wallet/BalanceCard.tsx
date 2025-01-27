@@ -1,20 +1,66 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Card } from "@/components/ui/card";
 import { Eye, EyeOff, Copy, Check } from "lucide-react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { cn } from "@/lib/utils";
+import { supabase } from "@/integrations/supabase/client";
+import { Loader2 } from "lucide-react";
 
 export const BalanceCard = () => {
   const [showBalance, setShowBalance] = useState(true);
   const [selectedCurrency, setSelectedCurrency] = useState("HTG");
   const [copied, setCopied] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [balance, setBalance] = useState<number | null>(null);
   const walletCode = "4562 1122 4595 7852";
+
+  useEffect(() => {
+    const fetchBalance = async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) return;
+
+      const { data } = await supabase
+        .from('balances')
+        .select('total_balance, monthly_income, monthly_spending')
+        .eq('user_id', user.id)
+        .single();
+
+      setBalance(data?.total_balance || 0);
+      setLoading(false);
+    };
+
+    fetchBalance();
+  }, []);
 
   const handleCopyCode = async () => {
     await navigator.clipboard.writeText(walletCode);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };
+
+  const formatBalance = (amount: number | null) => {
+    if (amount === null) return "0.00";
+    switch (selectedCurrency) {
+      case "HTG":
+        return `HTG ${amount.toFixed(2)}`;
+      case "USD":
+        return `$${(amount / 125).toFixed(2)}`;
+      case "EUR":
+        return `€${(amount / 150).toFixed(2)}`;
+      case "BTC":
+        return `₿${(amount / 5000000).toFixed(8)}`;
+      default:
+        return `HTG ${amount.toFixed(2)}`;
+    }
+  };
+
+  if (loading) {
+    return (
+      <Card className="p-6 flex justify-center items-center">
+        <Loader2 className="h-6 w-6 animate-spin" />
+      </Card>
+    );
+  }
 
   return (
     <Card className="p-6 mb-6 bg-gradient-to-br from-gaming-600 via-gaming-500 to-gaming-400 relative overflow-hidden shadow-lg rounded-lg">
@@ -57,10 +103,7 @@ export const BalanceCard = () => {
               "text-3xl font-bold transition-opacity duration-300",
               !showBalance && "opacity-0"
             )}>
-              {selectedCurrency === "HTG" ? "HTG 156,789.00" : 
-               selectedCurrency === "USD" ? "$1,234.56" :
-               selectedCurrency === "EUR" ? "€890.12" :
-               "₿0.0234"}
+              {formatBalance(balance)}
             </h2>
           </div>
           <div className="flex gap-2">
@@ -75,14 +118,18 @@ export const BalanceCard = () => {
             <div className="h-2 bg-white/20 rounded-full overflow-hidden">
               <div className="h-full w-3/4 bg-green-400"></div>
             </div>
-            <p className="text-sm mt-1 text-gray-200">HTG 120,000.00</p>
+            <p className="text-sm mt-1 text-gray-200">
+              {formatBalance(balance ? balance * 0.75 : 0)}
+            </p>
           </div>
           <div className="flex-1">
             <p className="text-sm text-gray-200 mb-1">Locked</p>
             <div className="h-2 bg-white/20 rounded-full overflow-hidden">
               <div className="h-full w-1/4 bg-yellow-400"></div>
             </div>
-            <p className="text-sm mt-1 text-gray-200">HTG 36,789.00</p>
+            <p className="text-sm mt-1 text-gray-200">
+              {formatBalance(balance ? balance * 0.25 : 0)}
+            </p>
           </div>
         </div>
 
