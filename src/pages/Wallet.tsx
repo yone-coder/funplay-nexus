@@ -1,14 +1,12 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Bell, Wallet as WalletIcon, Shield, Phone } from "lucide-react";
+import { Bell, Wallet as WalletIcon, Shield, Phone, Home, Settings as SettingsIcon, Clock, HelpCircle } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Coins, ArrowUpRight, Trophy, History } from "lucide-react";
 import { BalanceCard } from "@/components/wallet/BalanceCard";
 import { QuickActions } from "@/components/wallet/QuickActions";
 import { TokensList } from "@/components/wallet/TokensList";
 import { TransactionsList } from "@/components/wallet/TransactionsList";
 import { TrophiesList } from "@/components/wallet/TrophiesList";
-import { HistoryList } from "@/components/wallet/HistoryList";
 import { SecuritySettings } from "@/components/wallet/SecuritySettings";
 import { PhoneTopUp } from "@/components/wallet/PhoneTopUp";
 import { useToast } from "@/hooks/use-toast";
@@ -99,52 +97,50 @@ const Wallet = () => {
       <BalanceCard />
       <QuickActions />
 
-      <Tabs defaultValue="tokens" className="w-full">
+      <Tabs defaultValue="overview" className="w-full">
         <TabsList className="w-full justify-start mb-6 bg-transparent">
-          <TabsTrigger value="tokens" className="data-[state=active]:bg-gaming-500">
-            <Coins className="h-4 w-4 mr-2" />
-            Tokens
+          <TabsTrigger value="overview" className="data-[state=active]:bg-gaming-500">
+            <Home className="h-4 w-4 mr-2" />
+            Overview
           </TabsTrigger>
-          <TabsTrigger value="transactions" className="data-[state=active]:bg-gaming-500">
-            <ArrowUpRight className="h-4 w-4 mr-2" />
-            Transactions
+          <TabsTrigger value="activity" className="data-[state=active]:bg-gaming-500">
+            <Clock className="h-4 w-4 mr-2" />
+            Activity
           </TabsTrigger>
-          <TabsTrigger value="trophies" className="data-[state=active]:bg-gaming-500">
-            <Trophy className="h-4 w-4 mr-2" />
-            Trophies
+          <TabsTrigger value="settings" className="data-[state=active]:bg-gaming-500">
+            <SettingsIcon className="h-4 w-4 mr-2" />
+            Settings
           </TabsTrigger>
-          <TabsTrigger value="history" className="data-[state=active]:bg-gaming-500">
-            <History className="h-4 w-4 mr-2" />
-            History
-          </TabsTrigger>
-          <TabsTrigger value="topup" className="data-[state=active]:bg-gaming-500">
-            <Phone className="h-4 w-4 mr-2" />
-            Top-Up
+          <TabsTrigger value="help" className="data-[state=active]:bg-gaming-500">
+            <HelpCircle className="h-4 w-4 mr-2" />
+            Help
           </TabsTrigger>
         </TabsList>
 
-        <TabsContent value="tokens">
-          <TokensList />
+        <TabsContent value="overview">
+          <div className="grid gap-6">
+            <TokensList />
+            <TransactionsList />
+            <TrophiesList />
+          </div>
         </TabsContent>
 
-        <TabsContent value="transactions">
+        <TabsContent value="activity">
           <TransactionsList />
         </TabsContent>
 
-        <TabsContent value="trophies">
-          <TrophiesList />
+        <TabsContent value="settings">
+          <SecuritySettings />
         </TabsContent>
 
-        <TabsContent value="history">
-          <HistoryList />
-        </TabsContent>
-
-        <TabsContent value="topup">
-          <PhoneTopUp />
+        <TabsContent value="help">
+          <div className="text-center p-8">
+            <HelpCircle className="h-12 w-12 mx-auto mb-4 text-gaming-400" />
+            <h3 className="text-xl font-bold mb-2">Need Help?</h3>
+            <p className="text-gray-400">Contact our support team for assistance</p>
+          </div>
         </TabsContent>
       </Tabs>
-
-      <SecuritySettings />
     </div>
   );
 };

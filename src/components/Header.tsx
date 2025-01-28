@@ -4,7 +4,7 @@ import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import type { User } from "@supabase/supabase-js";
-import { Bell, Scan, Search, UserPlus, LogOut, Settings } from "lucide-react";
+import { Bell, Scan, Search, UserPlus, LogOut, Settings, Sun, Moon } from "lucide-react";
 import { AuthModals } from "./auth/AuthModals";
 import { supabase } from "@/integrations/supabase/client";
 import {
@@ -16,6 +16,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useToast } from "./ui/use-toast";
+import { Progress } from "./ui/progress";
 
 const Header = () => {
   const navigate = useNavigate();
@@ -23,6 +24,9 @@ const Header = () => {
   const [user, setUser] = useState<User | null>(null);
   const [isLoginOpen, setIsLoginOpen] = useState(false);
   const [isSignUpOpen, setIsSignUpOpen] = useState(false);
+  const [isDarkMode, setIsDarkMode] = useState(false);
+  const [notifications, setNotifications] = useState([]);
+  const [progress, setProgress] = useState(65); // Example XP progress
 
   useEffect(() => {
     // Initialize session
@@ -69,44 +73,61 @@ const Header = () => {
     }
   };
 
+  const toggleDarkMode = () => {
+    setIsDarkMode(!isDarkMode);
+    document.documentElement.classList.toggle('dark');
+  };
+
   if (user) {
     return (
       <header className="sticky top-0 z-50 w-full border-b border-gaming-600 bg-primary px-4 py-3">
         <div className="flex items-center justify-between gap-4">
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Avatar className="h-8 w-8 cursor-pointer">
-                <AvatarImage src={user.user_metadata.avatar_url ?? "https://github.com/shadcn.png"} />
-                <AvatarFallback>
-                  {user.email?.substring(0, 2).toUpperCase() ?? "U"}
-                </AvatarFallback>
-              </Avatar>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="w-56">
-              <DropdownMenuLabel>
-                <div className="flex flex-col space-y-1">
-                  <p className="text-sm font-medium leading-none">{user.user_metadata.full_name || "User"}</p>
-                  <p className="text-xs leading-none text-muted-foreground">{user.email}</p>
+          <div className="flex items-center gap-4">
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <div className="flex items-center gap-3 cursor-pointer">
+                  <Avatar className="h-10 w-10">
+                    <AvatarImage src={user.user_metadata.avatar_url ?? "https://github.com/shadcn.png"} />
+                    <AvatarFallback>
+                      {user.email?.substring(0, 2).toUpperCase() ?? "U"}
+                    </AvatarFallback>
+                  </Avatar>
+                  <div className="hidden md:block">
+                    <p className="font-medium">{user.user_metadata.full_name || "User"}</p>
+                    <div className="flex gap-2">
+                      <span className="text-xs px-2 py-0.5 bg-green-500/20 text-green-400 rounded-full">Verified</span>
+                      <span className="text-xs px-2 py-0.5 bg-purple-500/20 text-purple-400 rounded-full">Elite</span>
+                    </div>
+                    <Progress value={progress} className="w-32 h-1 mt-1" />
+                  </div>
                 </div>
-              </DropdownMenuLabel>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem onClick={() => navigate("/profile")} className="cursor-pointer">
-                <UserPlus className="mr-2 h-4 w-4" />
-                Profile
-              </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => navigate("/settings")} className="cursor-pointer">
-                <Settings className="mr-2 h-4 w-4" />
-                Settings
-              </DropdownMenuItem>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem onClick={handleSignOut} className="cursor-pointer">
-                <LogOut className="mr-2 h-4 w-4" />
-                Sign out
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-56">
+                <DropdownMenuLabel>
+                  <div className="flex flex-col space-y-1">
+                    <p className="text-sm font-medium leading-none">{user.user_metadata.full_name || "User"}</p>
+                    <p className="text-xs leading-none text-muted-foreground">{user.email}</p>
+                  </div>
+                </DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem onClick={() => navigate("/profile")} className="cursor-pointer">
+                  <UserPlus className="mr-2 h-4 w-4" />
+                  Profile
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => navigate("/settings")} className="cursor-pointer">
+                  <Settings className="mr-2 h-4 w-4" />
+                  Settings
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem onClick={handleSignOut} className="cursor-pointer">
+                  <LogOut className="mr-2 h-4 w-4" />
+                  Sign out
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
 
-          <div className="flex flex-1 items-center gap-2 rounded-full bg-gaming-600 px-4 py-1.5">
+          <div className="flex flex-1 items-center gap-2 rounded-full bg-gaming-600 px-4 py-1.5 mx-4">
             <Search className="h-5 w-5 text-gray-400" />
             <Input
               type="search"
@@ -116,8 +137,41 @@ const Header = () => {
           </div>
 
           <div className="flex items-center gap-4">
+            <button
+              onClick={toggleDarkMode}
+              className="p-2 rounded-full hover:bg-gray-700/20 transition-colors"
+            >
+              {isDarkMode ? (
+                <Moon className="h-5 w-5" />
+              ) : (
+                <Sun className="h-5 w-5" />
+              )}
+            </button>
             <Scan className="h-6 w-6 cursor-pointer text-gray-400 hover:text-white" />
-            <Bell className="h-6 w-6 cursor-pointer text-gray-400 hover:text-white" />
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <div className="relative cursor-pointer">
+                  <Bell className="h-6 w-6 text-gray-400 hover:text-white" />
+                  {notifications.length > 0 && (
+                    <span className="absolute -top-1 -right-1 h-3 w-3 bg-red-500 rounded-full" />
+                  )}
+                </div>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-80">
+                <DropdownMenuLabel>Notifications</DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                {notifications.length === 0 ? (
+                  <div className="p-4 text-center text-sm text-gray-500">
+                    No new notifications
+                  </div>
+                ) : (
+                  // ... notifications list would go here
+                  <div className="p-4 text-center text-sm text-gray-500">
+                    No new notifications
+                  </div>
+                )}
+              </DropdownMenuContent>
+            </DropdownMenu>
           </div>
         </div>
       </header>
