@@ -10,10 +10,10 @@ import {
   Settings as SettingsIcon, 
   HelpCircle,
   Trophy,
-  Heart,
   User
 } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import { NewBalanceCard } from "@/components/wallet/NewBalanceCard";
 import { NewQuickActions } from "@/components/wallet/NewQuickActions";
 import { TokensList } from "@/components/wallet/TokensList";
@@ -72,36 +72,38 @@ const Wallet = () => {
       </div>
 
       <Tabs defaultValue="overview" className="w-full">
-        <TabsList className="w-full justify-start mb-6">
-          <TabsTrigger value="overview" className="data-[state=active]:bg-gaming-500">
-            <Home className="h-4 w-4 mr-2" />
-            Overview
-          </TabsTrigger>
-          <TabsTrigger value="accounts" className="data-[state=active]:bg-gaming-500">
-            <CreditCard className="h-4 w-4 mr-2" />
-            Accounts
-          </TabsTrigger>
-          <TabsTrigger value="activity" className="data-[state=active]:bg-gaming-500">
-            <Activity className="h-4 w-4 mr-2" />
-            Activity
-          </TabsTrigger>
-          <TabsTrigger value="rewards" className="data-[state=active]:bg-gaming-500">
-            <Trophy className="h-4 w-4 mr-2" />
-            Rewards
-          </TabsTrigger>
-          <TabsTrigger value="leaderboard" className="data-[state=active]:bg-gaming-500">
-            <User className="h-4 w-4 mr-2" />
-            Leaderboard
-          </TabsTrigger>
-          <TabsTrigger value="settings" className="data-[state=active]:bg-gaming-500">
-            <SettingsIcon className="h-4 w-4 mr-2" />
-            Settings
-          </TabsTrigger>
-          <TabsTrigger value="help" className="data-[state=active]:bg-gaming-500">
-            <HelpCircle className="h-4 w-4 mr-2" />
-            Help
-          </TabsTrigger>
-        </TabsList>
+        <ScrollArea className="w-full mb-6">
+          <TabsList className="w-full justify-start inline-flex">
+            <TabsTrigger value="overview" className="data-[state=active]:bg-gaming-500">
+              <Home className="h-4 w-4 mr-2" />
+              Overview
+            </TabsTrigger>
+            <TabsTrigger value="accounts" className="data-[state=active]:bg-gaming-500">
+              <CreditCard className="h-4 w-4 mr-2" />
+              Accounts
+            </TabsTrigger>
+            <TabsTrigger value="activity" className="data-[state=active]:bg-gaming-500">
+              <Activity className="h-4 w-4 mr-2" />
+              Activity
+            </TabsTrigger>
+            <TabsTrigger value="rewards" className="data-[state=active]:bg-gaming-500">
+              <Trophy className="h-4 w-4 mr-2" />
+              Rewards
+            </TabsTrigger>
+            <TabsTrigger value="leaderboard" className="data-[state=active]:bg-gaming-500">
+              <User className="h-4 w-4 mr-2" />
+              Leaderboard
+            </TabsTrigger>
+            <TabsTrigger value="settings" className="data-[state=active]:bg-gaming-500">
+              <SettingsIcon className="h-4 w-4 mr-2" />
+              Settings
+            </TabsTrigger>
+            <TabsTrigger value="help" className="data-[state=active]:bg-gaming-500">
+              <HelpCircle className="h-4 w-4 mr-2" />
+              Help
+            </TabsTrigger>
+          </TabsList>
+        </ScrollArea>
 
         <TabsContent value="overview">
           <div className="grid gap-6">
