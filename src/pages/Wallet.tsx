@@ -1,9 +1,21 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Bell, Wallet as WalletIcon, Shield, Phone, Home, Settings as SettingsIcon, Clock, HelpCircle } from "lucide-react";
+import { 
+  Wallet as WalletIcon, 
+  Shield, 
+  Bell, 
+  Home, 
+  CreditCard, 
+  Activity, 
+  Settings as SettingsIcon, 
+  HelpCircle,
+  Trophy,
+  Heart,
+  User
+} from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { BalanceCard } from "@/components/wallet/BalanceCard";
-import { QuickActions } from "@/components/wallet/QuickActions";
+import { NewBalanceCard } from "@/components/wallet/NewBalanceCard";
+import { NewQuickActions } from "@/components/wallet/NewQuickActions";
 import { TokensList } from "@/components/wallet/TokensList";
 import { TransactionsList } from "@/components/wallet/TransactionsList";
 import { TrophiesList } from "@/components/wallet/TrophiesList";
@@ -11,15 +23,6 @@ import { SecuritySettings } from "@/components/wallet/SecuritySettings";
 import { PhoneTopUp } from "@/components/wallet/PhoneTopUp";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
-import { RealtimePostgresChangesPayload } from "@supabase/supabase-js";
-import type { Database } from "@/integrations/supabase/types";
-
-type Transaction = Database['public']['Tables']['transactions']['Row'];
-type TransactionChange = RealtimePostgresChangesPayload<{
-  [key: string]: any;
-}> & {
-  new: Transaction;
-};
 
 const Wallet = () => {
   const navigate = useNavigate();
@@ -46,38 +49,12 @@ const Wallet = () => {
     checkAuth();
   }, [navigate, toast]);
 
-  useEffect(() => {
-    const channel = supabase
-      .channel('schema-db-changes')
-      .on(
-        'postgres_changes',
-        {
-          event: '*',
-          schema: 'public',
-          table: 'transactions'
-        },
-        (payload: TransactionChange) => {
-          if (payload.new) {
-            toast({
-              title: "Transaction Update",
-              description: `Transaction ${payload.eventType}: ${payload.new.type} - ${payload.new.amount} ${payload.new.currency}`,
-            });
-          }
-        }
-      )
-      .subscribe();
-
-    return () => {
-      supabase.removeChannel(channel);
-    };
-  }, [toast]);
-
   if (isLoading) {
     return <div className="flex items-center justify-center min-h-screen">Loading...</div>;
   }
 
   return (
-    <div className="pb-20 px-4 max-w-7xl mx-auto">
+    <div className="pb-20 px-4 max-w-7xl mx-auto dark:bg-gray-900">
       <div className="flex justify-between items-center mt-6 mb-8">
         <div className="flex items-center gap-3">
           <WalletIcon className="h-8 w-8 text-gaming-400" />
@@ -94,8 +71,8 @@ const Wallet = () => {
         </div>
       </div>
 
-      <BalanceCard />
-      <QuickActions />
+      <NewBalanceCard />
+      <NewQuickActions />
 
       <Tabs defaultValue="overview" className="w-full">
         <TabsList className="w-full justify-start mb-6 bg-transparent">
@@ -103,9 +80,21 @@ const Wallet = () => {
             <Home className="h-4 w-4 mr-2" />
             Overview
           </TabsTrigger>
+          <TabsTrigger value="accounts" className="data-[state=active]:bg-gaming-500">
+            <CreditCard className="h-4 w-4 mr-2" />
+            Accounts
+          </TabsTrigger>
           <TabsTrigger value="activity" className="data-[state=active]:bg-gaming-500">
-            <Clock className="h-4 w-4 mr-2" />
+            <Activity className="h-4 w-4 mr-2" />
             Activity
+          </TabsTrigger>
+          <TabsTrigger value="rewards" className="data-[state=active]:bg-gaming-500">
+            <Trophy className="h-4 w-4 mr-2" />
+            Rewards
+          </TabsTrigger>
+          <TabsTrigger value="leaderboard" className="data-[state=active]:bg-gaming-500">
+            <User className="h-4 w-4 mr-2" />
+            Leaderboard
           </TabsTrigger>
           <TabsTrigger value="settings" className="data-[state=active]:bg-gaming-500">
             <SettingsIcon className="h-4 w-4 mr-2" />
@@ -125,8 +114,28 @@ const Wallet = () => {
           </div>
         </TabsContent>
 
+        <TabsContent value="accounts">
+          <PhoneTopUp />
+        </TabsContent>
+
         <TabsContent value="activity">
           <TransactionsList />
+        </TabsContent>
+
+        <TabsContent value="rewards">
+          <div className="text-center p-8">
+            <Trophy className="h-12 w-12 mx-auto mb-4 text-gaming-400" />
+            <h3 className="text-xl font-bold mb-2">Your Rewards</h3>
+            <p className="text-gray-400">Track your achievements and rewards</p>
+          </div>
+        </TabsContent>
+
+        <TabsContent value="leaderboard">
+          <div className="text-center p-8">
+            <User className="h-12 w-12 mx-auto mb-4 text-gaming-400" />
+            <h3 className="text-xl font-bold mb-2">Leaderboard</h3>
+            <p className="text-gray-400">See where you rank among other players</p>
+          </div>
         </TabsContent>
 
         <TabsContent value="settings">

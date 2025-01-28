@@ -26,25 +26,34 @@ export type Database = {
       }
       balances: {
         Row: {
+          auto_deposit: boolean | null
+          default_currency: string | null
           id: string
           monthly_income: number | null
           monthly_spending: number | null
+          payment_methods: Json | null
           total_balance: number | null
           updated_at: string | null
           user_id: string
         }
         Insert: {
+          auto_deposit?: boolean | null
+          default_currency?: string | null
           id?: string
           monthly_income?: number | null
           monthly_spending?: number | null
+          payment_methods?: Json | null
           total_balance?: number | null
           updated_at?: string | null
           user_id: string
         }
         Update: {
+          auto_deposit?: boolean | null
+          default_currency?: string | null
           id?: string
           monthly_income?: number | null
           monthly_spending?: number | null
+          payment_methods?: Json | null
           total_balance?: number | null
           updated_at?: string | null
           user_id?: string
@@ -53,49 +62,68 @@ export type Database = {
       }
       profiles: {
         Row: {
+          achievements: Json | null
           avatar_url: string | null
+          badges: Json | null
           bio: string | null
           created_at: string
           full_name: string | null
           id: string
+          level: number | null
           location: string | null
           preferences: Json | null
+          rank: string | null
           social_links: Json | null
+          status: string | null
           updated_at: string
           username: string | null
           website: string | null
+          xp: number | null
         }
         Insert: {
+          achievements?: Json | null
           avatar_url?: string | null
+          badges?: Json | null
           bio?: string | null
           created_at?: string
           full_name?: string | null
           id: string
+          level?: number | null
           location?: string | null
           preferences?: Json | null
+          rank?: string | null
           social_links?: Json | null
+          status?: string | null
           updated_at?: string
           username?: string | null
           website?: string | null
+          xp?: number | null
         }
         Update: {
+          achievements?: Json | null
           avatar_url?: string | null
+          badges?: Json | null
           bio?: string | null
           created_at?: string
           full_name?: string | null
           id?: string
+          level?: number | null
           location?: string | null
           preferences?: Json | null
+          rank?: string | null
           social_links?: Json | null
+          status?: string | null
           updated_at?: string
           username?: string | null
           website?: string | null
+          xp?: number | null
         }
         Relationships: []
       }
       transactions: {
         Row: {
           amount: number
+          category: string | null
           created_at: string | null
           currency: string
           description: string | null
@@ -103,6 +131,7 @@ export type Database = {
           metadata: Json | null
           recipient_id: string | null
           status: string | null
+          sub_category: string | null
           tournament_id: string | null
           type: string
           updated_at: string | null
@@ -110,6 +139,7 @@ export type Database = {
         }
         Insert: {
           amount: number
+          category?: string | null
           created_at?: string | null
           currency: string
           description?: string | null
@@ -117,6 +147,7 @@ export type Database = {
           metadata?: Json | null
           recipient_id?: string | null
           status?: string | null
+          sub_category?: string | null
           tournament_id?: string | null
           type: string
           updated_at?: string | null
@@ -124,6 +155,7 @@ export type Database = {
         }
         Update: {
           amount?: number
+          category?: string | null
           created_at?: string | null
           currency?: string
           description?: string | null
@@ -131,6 +163,7 @@ export type Database = {
           metadata?: Json | null
           recipient_id?: string | null
           status?: string | null
+          sub_category?: string | null
           tournament_id?: string | null
           type?: string
           updated_at?: string | null
