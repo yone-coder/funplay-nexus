@@ -21,7 +21,7 @@ const App = () => (
       <Toaster />
       <Sonner />
       <BrowserRouter>
-        <div className="min-h-screen bg-primary text-white">
+        <div className="min-h-screen bg-background text-foreground">
           <Header />
           <Routes>
             <Route path="/" element={<Index />} />
