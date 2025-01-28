@@ -54,7 +54,7 @@ const Wallet = () => {
   }
 
   return (
-    <div className="pb-20 px-4 max-w-7xl mx-auto dark:bg-gray-900">
+    <div className="pb-20 px-4 max-w-7xl mx-auto">
       <div className="flex justify-between items-center mt-6 mb-8">
         <div className="flex items-center gap-3">
           <WalletIcon className="h-8 w-8 text-gaming-400" />
@@ -71,11 +71,8 @@ const Wallet = () => {
         </div>
       </div>
 
-      <NewBalanceCard />
-      <NewQuickActions />
-
       <Tabs defaultValue="overview" className="w-full">
-        <TabsList className="w-full justify-start mb-6 bg-transparent">
+        <TabsList className="w-full justify-start mb-6">
           <TabsTrigger value="overview" className="data-[state=active]:bg-gaming-500">
             <Home className="h-4 w-4 mr-2" />
             Overview
@@ -108,6 +105,8 @@ const Wallet = () => {
 
         <TabsContent value="overview">
           <div className="grid gap-6">
+            <NewBalanceCard />
+            <NewQuickActions />
             <TokensList />
             <TransactionsList />
             <TrophiesList />
