@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { 
-  Home, 
   CreditCard, 
   Activity, 
   Settings as SettingsIcon, 
@@ -51,106 +50,121 @@ const Wallet = () => {
   }
 
   return (
-    <div className="max-w-5xl mx-auto">
+    <div className="min-h-screen bg-background">
       <Tabs defaultValue="overview" className="w-full">
-        <div className="sticky top-0 z-10 bg-background/80 backdrop-blur-sm pb-4">
+        <div className="sticky top-0 z-10 bg-background/80 backdrop-blur-sm border-b">
           <ScrollArea className="w-full">
-            <TabsList className="inline-flex w-max space-x-2 border-b border-border/40 bg-transparent p-0">
-              <TabsTrigger 
-                value="overview" 
-                className="rounded-none border-b-2 border-transparent px-4 py-2 hover:text-accent data-[state=active]:border-gaming-400 data-[state=active]:text-gaming-400 data-[state=active]:bg-transparent"
-              >
-                <Home className="h-4 w-4 mr-2" />
-                Overview
-              </TabsTrigger>
-              <TabsTrigger 
-                value="accounts" 
-                className="rounded-none border-b-2 border-transparent px-4 py-2 hover:text-accent data-[state=active]:border-gaming-400 data-[state=active]:text-gaming-400 data-[state=active]:bg-transparent"
-              >
-                <CreditCard className="h-4 w-4 mr-2" />
-                Accounts
-              </TabsTrigger>
-              <TabsTrigger 
-                value="activity" 
-                className="rounded-none border-b-2 border-transparent px-4 py-2 hover:text-accent data-[state=active]:border-gaming-400 data-[state=active]:text-gaming-400 data-[state=active]:bg-transparent"
-              >
-                <Activity className="h-4 w-4 mr-2" />
-                Activity
-              </TabsTrigger>
-              <TabsTrigger 
-                value="rewards" 
-                className="rounded-none border-b-2 border-transparent px-4 py-2 hover:text-accent data-[state=active]:border-gaming-400 data-[state=active]:text-gaming-400 data-[state=active]:bg-transparent"
-              >
-                <Trophy className="h-4 w-4 mr-2" />
-                Rewards
-              </TabsTrigger>
-              <TabsTrigger 
-                value="leaderboard" 
-                className="rounded-none border-b-2 border-transparent px-4 py-2 hover:text-accent data-[state=active]:border-gaming-400 data-[state=active]:text-gaming-400 data-[state=active]:bg-transparent"
-              >
-                <User className="h-4 w-4 mr-2" />
-                Leaderboard
-              </TabsTrigger>
-              <TabsTrigger 
-                value="settings" 
-                className="rounded-none border-b-2 border-transparent px-4 py-2 hover:text-accent data-[state=active]:border-gaming-400 data-[state=active]:text-gaming-400 data-[state=active]:bg-transparent"
-              >
-                <SettingsIcon className="h-4 w-4 mr-2" />
-                Settings
-              </TabsTrigger>
-              <TabsTrigger 
-                value="help" 
-                className="rounded-none border-b-2 border-transparent px-4 py-2 hover:text-accent data-[state=active]:border-gaming-400 data-[state=active]:text-gaming-400 data-[state=active]:bg-transparent"
-              >
-                <HelpCircle className="h-4 w-4 mr-2" />
-                Help
-              </TabsTrigger>
-            </TabsList>
+            <div className="max-w-screen-2xl mx-auto px-4">
+              <TabsList className="inline-flex w-max h-14 space-x-2 bg-transparent">
+                <TabsTrigger 
+                  value="overview" 
+                  className="px-4 py-2 text-sm font-medium transition-colors hover:text-primary data-[state=active]:text-primary data-[state=active]:border-b-2 data-[state=active]:border-primary"
+                >
+                  Overview
+                </TabsTrigger>
+                <TabsTrigger 
+                  value="accounts" 
+                  className="px-4 py-2 text-sm font-medium transition-colors hover:text-primary data-[state=active]:text-primary data-[state=active]:border-b-2 data-[state=active]:border-primary"
+                >
+                  <CreditCard className="h-4 w-4 mr-2" />
+                  Accounts
+                </TabsTrigger>
+                <TabsTrigger 
+                  value="activity" 
+                  className="px-4 py-2 text-sm font-medium transition-colors hover:text-primary data-[state=active]:text-primary data-[state=active]:border-b-2 data-[state=active]:border-primary"
+                >
+                  <Activity className="h-4 w-4 mr-2" />
+                  Activity
+                </TabsTrigger>
+                <TabsTrigger 
+                  value="rewards" 
+                  className="px-4 py-2 text-sm font-medium transition-colors hover:text-primary data-[state=active]:text-primary data-[state=active]:border-b-2 data-[state=active]:border-primary"
+                >
+                  <Trophy className="h-4 w-4 mr-2" />
+                  Rewards
+                </TabsTrigger>
+                <TabsTrigger 
+                  value="leaderboard" 
+                  className="px-4 py-2 text-sm font-medium transition-colors hover:text-primary data-[state=active]:text-primary data-[state=active]:border-b-2 data-[state=active]:border-primary"
+                >
+                  <User className="h-4 w-4 mr-2" />
+                  Leaderboard
+                </TabsTrigger>
+                <TabsTrigger 
+                  value="settings" 
+                  className="px-4 py-2 text-sm font-medium transition-colors hover:text-primary data-[state=active]:text-primary data-[state=active]:border-b-2 data-[state=active]:border-primary"
+                >
+                  <SettingsIcon className="h-4 w-4 mr-2" />
+                  Settings
+                </TabsTrigger>
+                <TabsTrigger 
+                  value="help" 
+                  className="px-4 py-2 text-sm font-medium transition-colors hover:text-primary data-[state=active]:text-primary data-[state=active]:border-b-2 data-[state=active]:border-primary"
+                >
+                  <HelpCircle className="h-4 w-4 mr-2" />
+                  Help
+                </TabsTrigger>
+              </TabsList>
+            </div>
           </ScrollArea>
         </div>
 
-        <div className="px-4 mt-6">
+        <div className="max-w-screen-2xl mx-auto px-4 py-6">
           <TabsContent value="overview" className="m-0 space-y-6">
             <div className="max-w-3xl mx-auto">
               <NewBalanceCard />
+              <div className="mt-6">
+                <NewQuickActions />
+              </div>
+              <div className="mt-6">
+                <TokensList />
+              </div>
+              <div className="mt-6">
+                <TransactionsList />
+              </div>
+              <div className="mt-6">
+                <TrophiesList />
+              </div>
             </div>
-            <NewQuickActions />
-            <TokensList />
-            <TransactionsList />
-            <TrophiesList />
           </TabsContent>
 
           <TabsContent value="accounts" className="m-0">
-            <PhoneTopUp />
+            <div className="max-w-3xl mx-auto">
+              <PhoneTopUp />
+            </div>
           </TabsContent>
 
           <TabsContent value="activity" className="m-0">
-            <TransactionsList />
+            <div className="max-w-3xl mx-auto">
+              <TransactionsList />
+            </div>
           </TabsContent>
 
           <TabsContent value="rewards" className="m-0">
-            <div className="text-center p-8">
-              <Trophy className="h-12 w-12 mx-auto mb-4 text-gaming-400 opacity-75" />
+            <div className="max-w-3xl mx-auto text-center py-8">
+              <Trophy className="h-12 w-12 mx-auto mb-4 text-muted-foreground" />
               <h3 className="text-xl font-semibold mb-2">Your Rewards</h3>
               <p className="text-muted-foreground">Track your achievements and rewards</p>
             </div>
           </TabsContent>
 
           <TabsContent value="leaderboard" className="m-0">
-            <div className="text-center p-8">
-              <User className="h-12 w-12 mx-auto mb-4 text-gaming-400 opacity-75" />
+            <div className="max-w-3xl mx-auto text-center py-8">
+              <User className="h-12 w-12 mx-auto mb-4 text-muted-foreground" />
               <h3 className="text-xl font-semibold mb-2">Leaderboard</h3>
               <p className="text-muted-foreground">See where you rank among other players</p>
             </div>
           </TabsContent>
 
           <TabsContent value="settings" className="m-0">
-            <SecuritySettings />
+            <div className="max-w-3xl mx-auto">
+              <SecuritySettings />
+            </div>
           </TabsContent>
 
           <TabsContent value="help" className="m-0">
-            <div className="text-center p-8">
-              <HelpCircle className="h-12 w-12 mx-auto mb-4 text-gaming-400 opacity-75" />
+            <div className="max-w-3xl mx-auto text-center py-8">
+              <HelpCircle className="h-12 w-12 mx-auto mb-4 text-muted-foreground" />
               <h3 className="text-xl font-semibold mb-2">Need Help?</h3>
               <p className="text-muted-foreground">Contact our support team for assistance</p>
             </div>
