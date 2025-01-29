@@ -73,7 +73,7 @@ const Wallet = () => {
 
       <Tabs defaultValue="overview" className="w-full">
         <div className="sticky top-0 z-10 bg-background/80 backdrop-blur-sm pb-4">
-          <ScrollArea className="w-full" orientation="horizontal">
+          <ScrollArea className="w-full">
             <TabsList className="inline-flex w-max border-b border-border/40 bg-transparent p-0">
               <TabsTrigger value="overview" className="rounded-none border-b-2 border-transparent px-4 py-2 hover:text-accent data-[state=active]:border-gaming-400 data-[state=active]:text-gaming-400 data-[state=active]:bg-transparent">
                 <Home className="h-4 w-4 mr-2" />
