@@ -38,10 +38,11 @@ serve(async (req) => {
     
     console.log(`Creating MonCash payment order for amount: ${amount} HTG`);
 
+    // Use the updated sandbox URL
     return new Response(
       JSON.stringify({
         orderId: mockOrderId,
-        redirectUrl: `https://sandbox.moncashbutton.digicelgroup.com/Moncash-middleware/Payment/Redirect?orderId=${mockOrderId}`,
+        redirectUrl: `https://moncashbutton.digicelgroup.com/Moncash-sandbox/Payment/Redirect?orderId=${mockOrderId}`,
       }),
       {
         headers: {
