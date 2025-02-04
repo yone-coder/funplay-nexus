@@ -1,3 +1,4 @@
+
 import { 
   ArrowUpRight, 
   ArrowDownRight, 
@@ -42,6 +43,33 @@ export const NewQuickActions = () => {
         return;
       }
 
+      if (type === 'DEPOSIT') {
+        // Handle MonCash deposit
+        const { data, error } = await supabase.functions.invoke('moncash-payment', {
+          body: { amount: parseFloat(amount) }
+        });
+
+        if (error) throw error;
+
+        // Store the transaction record
+        const { error: transactionError } = await supabase
+          .from('payment_gateway_transactions')
+          .insert({
+            user_id: user.id,
+            amount: parseFloat(amount),
+            gateway_type: 'MONCASH',
+            currency: 'HTG',
+            status: 'pending',
+            metadata: { orderId: data.orderId }
+          });
+
+        if (transactionError) throw transactionError;
+
+        // Redirect to MonCash payment page
+        window.location.href = data.redirectUrl;
+        return;
+      }
+
       const { error } = await supabase
         .from('transactions')
         .insert({
@@ -60,6 +88,7 @@ export const NewQuickActions = () => {
         description: `Your ${type.toLowerCase()} of ${amount} HTG has been initiated`,
       });
     } catch (error) {
+      console.error('Transaction error:', error);
       toast({
         title: "Error",
         description: "Failed to process transaction",
