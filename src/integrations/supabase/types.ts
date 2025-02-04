@@ -60,6 +60,27 @@ export type Database = {
         }
         Relationships: []
       }
+      currencies: {
+        Row: {
+          code: string
+          rate: number
+          symbol: string
+          updated_at: string | null
+        }
+        Insert: {
+          code: string
+          rate: number
+          symbol: string
+          updated_at?: string | null
+        }
+        Update: {
+          code?: string
+          rate?: number
+          symbol?: string
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           achievements: Json | null
