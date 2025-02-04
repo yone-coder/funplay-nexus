@@ -81,6 +81,59 @@ export type Database = {
         }
         Relationships: []
       }
+      payment_gateway_transactions: {
+        Row: {
+          amount: number
+          created_at: string | null
+          currency: string
+          gateway_reference: string | null
+          gateway_response: Json | null
+          gateway_type: Database["public"]["Enums"]["payment_gateway_type"]
+          id: string
+          metadata: Json | null
+          status: string
+          transaction_id: string | null
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          amount: number
+          created_at?: string | null
+          currency?: string
+          gateway_reference?: string | null
+          gateway_response?: Json | null
+          gateway_type: Database["public"]["Enums"]["payment_gateway_type"]
+          id?: string
+          metadata?: Json | null
+          status?: string
+          transaction_id?: string | null
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          amount?: number
+          created_at?: string | null
+          currency?: string
+          gateway_reference?: string | null
+          gateway_response?: Json | null
+          gateway_type?: Database["public"]["Enums"]["payment_gateway_type"]
+          id?: string
+          metadata?: Json | null
+          status?: string
+          transaction_id?: string | null
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "payment_gateway_transactions_transaction_id_fkey"
+            columns: ["transaction_id"]
+            isOneToOne: false
+            referencedRelation: "transactions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       profiles: {
         Row: {
           achievements: Json | null
@@ -200,7 +253,7 @@ export type Database = {
       [_ in never]: never
     }
     Enums: {
-      [_ in never]: never
+      payment_gateway_type: "MONCASH"
     }
     CompositeTypes: {
       [_ in never]: never
