@@ -1,5 +1,4 @@
 
-// Use the correct Deno serve runtime
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 
 const corsHeaders = {
@@ -25,36 +24,66 @@ serve(async (req) => {
     }
 
     // Get MonCash credentials from environment variables
-    const clientId = Deno.env.get('MONCASH_CLIENT_ID');
-    const clientSecret = Deno.env.get('MONCASH_CLIENT_SECRET');
+    const businessKey = Deno.env.get('MONCASH_BUSINESS_KEY');
+    const apiKey = Deno.env.get('MONCASH_API_KEY');
 
-    if (!clientId || !clientSecret) {
+    if (!businessKey || !apiKey) {
       throw new Error('MonCash credentials not configured');
     }
 
-    // TODO: Implement actual MonCash API integration here
-    // For now, we'll just return a mock response
-    const mockOrderId = crypto.randomUUID();
-    
-    console.log(`Creating MonCash payment order for amount: ${amount} HTG`);
+    const orderId = crypto.randomUUID();
 
-    // Use the updated sandbox URL
-    return new Response(
-      JSON.stringify({
-        orderId: mockOrderId,
-        redirectUrl: `https://moncashbutton.digicelgroup.com/Moncash-sandbox/Payment/Redirect?orderId=${mockOrderId}`,
-      }),
-      {
-        headers: {
-          ...corsHeaders,
-          'Content-Type': 'application/json',
-        },
+    // TODO: Implement RSA encryption of amount and orderId
+    // For now, we're proceeding without encryption for development
+    
+    console.log(`Creating MonCash payment order for amount: ${amount} HTG with orderId: ${orderId}`);
+
+    try {
+      // Make request to MonCash REST API to get payment token
+      const response = await fetch(
+        `https://moncashbutton.digicelgroup.com/Moncash-middleware/Checkout/Rest/${businessKey}`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            amount: amount.toString(),
+            orderId: orderId,
+          })
+        }
+      );
+
+      const data = await response.json();
+
+      if (!data.success) {
+        throw new Error(data.error || 'Failed to create MonCash payment');
       }
-    );
+
+      return new Response(
+        JSON.stringify({
+          success: true,
+          orderId: orderId,
+          redirectUrl: `https://moncashbutton.digicelgroup.com/Moncash-middleware/Checkout/Payment/Redirect/${data.token}`,
+        }),
+        {
+          headers: {
+            ...corsHeaders,
+            'Content-Type': 'application/json',
+          },
+        }
+      );
+    } catch (error) {
+      console.error('MonCash API error:', error);
+      throw new Error('Failed to communicate with MonCash API');
+    }
   } catch (error) {
     console.error('Error processing MonCash payment:', error);
     return new Response(
-      JSON.stringify({ error: error.message }),
+      JSON.stringify({ 
+        success: false, 
+        error: error.message 
+      }),
       {
         status: 400,
         headers: {
